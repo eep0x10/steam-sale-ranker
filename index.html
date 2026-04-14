@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Steam Sale Ranker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #1b2838;
+      color: #c6d4df;
+      padding: 20px;
+    }
+    h1 {
+      color: #66c0f4;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: #8f98a0;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .formula {
+      background: #16202d;
+      border-left: 3px solid #66c0f4;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #c7d5e0;
+      margin-bottom: 28px;
+      display: inline-block;
+    }
+    .block {
+      margin-bottom: 32px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      color: #fff;
+    }
+    .block-name { font-weight: 700; font-size: 1rem; }
+    .block-count { font-size: 0.82rem; opacity: 0.85; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #16202d;
+      font-size: 0.83rem;
+    }
+    thead th {
+      background: #0e1822;
+      padding: 7px 10px;
+      text-align: left;
+      color: #8f98a0;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(even) { background: #1a2535; }
+    tbody tr:hover { background: #2a3f5a; }
+    td { padding: 5px 10px; vertical-align: middle; }
+    td.rank  { color: #8f98a0; width: 36px; text-align: right; }
+    td.name  { min-width: 260px; }
+    td.name a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #c6d4df;
+      text-decoration: none;
+    }
+    td.name a:hover span { color: #66c0f4; text-decoration: underline; }
+    td.name img {
+      width: 116px;
+      height: 43px;
+      object-fit: cover;
+      border-radius: 3px;
+      flex-shrink: 0;
+      background: #0e1822;
+    }
+    td.name span {
+      font-size: 0.84rem;
+      line-height: 1.3;
+    }
+    td.disc  { font-weight: 700; width: 70px; white-space: nowrap; }
+    td.pct   { width: 55px; white-space: nowrap; }
+    td.reviews { width: 75px; color: #8f98a0; white-space: nowrap; }
+    td.orig  { width: 105px; color: #8f98a0; text-decoration: line-through; white-space: nowrap; }
+    td.sale      { width: 105px; font-weight: 600; color: #beee11; white-space: nowrap; }
+    td.low-ever  { width: 90px; font-family: monospace; color: #8f98a0; white-space: nowrap; font-size: 0.8rem; }
+    tr.hist-low td.low-ever { color: #4fc24f; font-weight: 700; }
+    td.score { width: 65px; font-family: monospace; color: #66c0f4; white-space: nowrap; }
+    tr.hist-low { background: #1a3320 !important; border-left: 3px solid #4fc24f; }
+    tr.hist-low:hover { background: #1f4028 !important; }
+    .low-badge {
+      display: inline-block;
+      margin-left: 7px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #4fc24f;
+      color: #0a1a0a;
+      font-size: 0.68rem;
+      font-weight: 700;
+      vertical-align: middle;
+      letter-spacing: 0.03em;
+    }
+    footer {
+      margin-top: 30px;
+      color: #8f98a0;
+      font-size: 0.78rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Steam Sale Ranker</h1>
+  <div class="subtitle">Gerado em 13/04/2026 10:55  —  112 jogos coletados</div>
+  <div class="formula">
+    score = (review% / 100) × log10(total_reviews + 1) × (1 + desconto / 200)
+  </div>
+  
+        <div class="block">
+          <div class="block-header" style="background:#4fc24f">
+            <span class="block-name">Overwhelmingly Positive</span>
+            <span class="block-count">54 jogos</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Desconto</th>
+                <th>Review%</th>
+                <th>Reviews</th>
+                <th>Preço Original</th>
+                <th>Preço Promo</th>
+                <th>Low Ever (USD)</th>
+                <th>Score ▼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank">1</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/sub/281610/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/281610/capsule_231x87.jpg?t=1549063193" alt="" loading="lazy">
+                    <span>RESIDENT EVIL 2 / BIOHAZARD RE:2 Deluxe Edition</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-75%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">144k</td>
+                <td class="orig">R$219,00</td>
+                <td class="sale">R$54,75</td>
+                <td class="low-ever">$4.69</td>
+                <td class="score">6.88</td>
+              </tr>
+              <tr>
+                <td class="rank">2</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/227300/Euro_Truck_Simulator_2/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/227300/da84d11d3ddd817e0cca299608b469a854d75ba5/capsule_231x87.jpg?t=1773641450" alt="" loading="lazy">
+                    <span>Euro Truck Simulator 2</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-75%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">140k</td>
+                <td class="orig">R$61,99</td>
+                <td class="sale">R$15,49</td>
+                <td class="low-ever">$1.99</td>
+                <td class="score">6.86</td>
+              </tr>
+              <tr>
+                <td class="rank">3</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/270880/American_Truck_Simulator/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/270880/8809b200b3ebdd7fbcdbfdbe6c8f91b2c0ce93df/capsule_231x87.jpg?t=1775546740" alt="" loading="lazy">
+                    <span>American Truck Simulator</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-75%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">91k</td>
+                <td class="orig">R$61,99</td>
+                <td class="sale">R$15,49</td>
+                <td class="low-ever">$1.99</td>
+                <td class="score">6.62</td>
+              </tr>
+              <tr>
+                <td class="rank">4</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/632360/Risk_of_Rain_2/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/632360/capsule_231x87.jpg?t=1775753930" alt="" loading="lazy">
+                    <span>Risk of Rain 2</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-67%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">160k</td>
+                <td class="orig">R$59,99</td>
+                <td class="sale">R$19,79</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.60</td>
+              </tr>
+              <tr>
+                <td class="rank">5</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/322330/Dont_Starve_Together/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/322330/29836375ea0f65ee0495d97a26c997f8cef7cab7/capsule_231x87.jpg?t=1775799180" alt="" loading="lazy">
+                    <span>Don't Starve Together</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-66%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">80k</td>
+                <td class="orig">R$27,99</td>
+                <td class="sale">R$9,51</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.20</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">6</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/457140/Oxygen_Not_Included/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/457140/capsule_231x87.jpg?t=1772559127" alt="" loading="lazy">
+                    <span>Oxygen Not Included<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-70%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">48k</td>
+                <td class="orig">R$45,99</td>
+                <td class="sale">R$13,79</td>
+                <td class="low-ever">$7.49</td>
+                <td class="score">6.01</td>
+              </tr>
+              <tr>
+                <td class="rank">7</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2050650/Resident_Evil_4/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2050650/capsule_231x87.jpg?t=1772502922" alt="" loading="lazy">
+                    <span>Resident Evil 4</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">63k</td>
+                <td class="orig">R$169,00</td>
+                <td class="sale">R$67,60</td>
+                <td class="low-ever">$3.75</td>
+                <td class="score">5.99</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">8</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/219740/Dont_Starve/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/219740/7d86b9837d78ffd5b6da896ef6410cbaf6461113/capsule_231x87.jpg?t=1775799276" alt="" loading="lazy">
+                    <span>Don't Starve<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-75%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">33k</td>
+                <td class="orig">R$20,69</td>
+                <td class="sale">R$5,17</td>
+                <td class="low-ever">$2.49</td>
+                <td class="score">5.96</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">9</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1089980/The_Henry_Stickmin_Collection/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1089980/capsule_231x87.jpg?t=1619212064" alt="" loading="lazy">
+                    <span>The Henry Stickmin Collection<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">39k</td>
+                <td class="orig">R$44,99</td>
+                <td class="sale">R$17,99</td>
+                <td class="low-ever">$5.99</td>
+                <td class="score">5.85</td>
+              </tr>
+              <tr>
+                <td class="rank">10</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3527290/PEAK/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3527290/1844964d7a353e50eb3cc979ea922729d8c1b0ad/capsule_231x87.jpg?t=1775581133" alt="" loading="lazy">
+                    <span>PEAK</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-38%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">123k</td>
+                <td class="orig">R$23,99</td>
+                <td class="sale">R$14,87</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.76</td>
+              </tr>
+              <tr>
+                <td class="rank">11</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1313140/Cult_of_the_Lamb/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1313140/1ac7c83bd1ce239a12d8e67b8ebc45765bb60319/capsule_231x87.jpg?t=1769836674" alt="" loading="lazy">
+                    <span>Cult of the Lamb</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">58k</td>
+                <td class="orig">R$64,95</td>
+                <td class="sale">R$32,47</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.72</td>
+              </tr>
+              <tr>
+                <td class="rank">12</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1332010/Stray/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1332010/capsule_231x87.jpg?t=1733260906" alt="" loading="lazy">
+                    <span>Stray</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">77k</td>
+                <td class="orig">R$89,99</td>
+                <td class="sale">R$53,99</td>
+                <td class="low-ever">$13.29</td>
+                <td class="score">5.69</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">13</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1388770/Cruelty_Squad/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1388770/capsule_231x87.jpg?t=1740330233" alt="" loading="lazy">
+                    <span>Cruelty Squad<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-70%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">19k</td>
+                <td class="orig">R$37,99</td>
+                <td class="sale">R$11,39</td>
+                <td class="low-ever">$5.99</td>
+                <td class="score">5.54</td>
+              </tr>
+              <tr>
+                <td class="rank">14</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1284190/The_Planet_Crafter/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1284190/cc86a1d66d722a3cfeda48540186e7fa12b3905b/capsule_231x87_alt_assets_12.jpg?t=1774532885" alt="" loading="lazy">
+                    <span>The Planet Crafter</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">35k</td>
+                <td class="orig">R$73,99</td>
+                <td class="sale">R$36,99</td>
+                <td class="low-ever">$9.99</td>
+                <td class="score">5.39</td>
+              </tr>
+              <tr>
+                <td class="rank">15</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/597170/Clone_Drone_in_the_Danger_Zone/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/597170/18f965af769d5fc4f7a8213a025ac4a633293289/capsule_231x87_alt_assets_2.jpg?t=1774539907" alt="" loading="lazy">
+                    <span>Clone Drone in the Danger Zone</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-65%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">17k</td>
+                <td class="orig">R$37,99</td>
+                <td class="sale">R$13,29</td>
+                <td class="low-ever">$5.99</td>
+                <td class="score">5.39</td>
+              </tr>
+              <tr>
+                <td class="rank">16</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/753640/Outer_Wilds/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/753640/capsule_231x87.jpg?t=1729097431" alt="" loading="lazy">
+                    <span>Outer Wilds</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">50k</td>
+                <td class="orig">R$67,99</td>
+                <td class="sale">R$40,79</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.35</td>
+              </tr>
+              <tr>
+                <td class="rank">17</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/519860/DUSK/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/519860/52906821e5100d6a0c77b4de4f2ccdd0c8c709dd/capsule_231x87.jpg?t=1767216306" alt="" loading="lazy">
+                    <span>DUSK</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">17k</td>
+                <td class="orig">R$49,99</td>
+                <td class="sale">R$19,99</td>
+                <td class="low-ever">$5.99</td>
+                <td class="score">5.33</td>
+              </tr>
+              <tr>
+                <td class="rank">18</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/990630/The_Last_Campfire/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/990630/capsule_231x87.jpg?t=1725272727" alt="" loading="lazy">
+                    <span>The Last Campfire</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-90%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$46,99</td>
+                <td class="sale">R$4,69</td>
+                <td class="low-ever">$1.06</td>
+                <td class="score">5.24</td>
+              </tr>
+              <tr>
+                <td class="rank">19</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1533420/Neon_White/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1533420/capsule_231x87.jpg?t=1729099604" alt="" loading="lazy">
+                    <span>Neon White</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">12k</td>
+                <td class="orig">R$74,99</td>
+                <td class="sale">R$29,99</td>
+                <td class="low-ever">$7.74</td>
+                <td class="score">5.21</td>
+              </tr>
+              <tr>
+                <td class="rank">20</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/787480/Phoenix_Wright_Ace_Attorney_Trilogy/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/787480/capsule_231x87.jpg?t=1768866317" alt="" loading="lazy">
+                    <span>Phoenix Wright: Ace Attorney Trilogy</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-67%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">10k</td>
+                <td class="orig">R$129,00</td>
+                <td class="sale">R$42,57</td>
+                <td class="low-ever">$7.49</td>
+                <td class="score">5.16</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">21</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1989270/Slay_the_Princess__The_Pristine_Cut/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1989270/90faf29da4637bbf2e935d6b587b34fd01e16799/capsule_231x87.jpg?t=1775751748" alt="" loading="lazy">
+                    <span>Slay the Princess — The Pristine Cut<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-45%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">22k</td>
+                <td class="orig">R$54,99</td>
+                <td class="sale">R$30,24</td>
+                <td class="low-ever">$9.89</td>
+                <td class="score">5.16</td>
+              </tr>
+              <tr>
+                <td class="rank">22</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/250320/The_Wolf_Among_Us/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/250320/capsule_231x87.jpg?t=1734104991" alt="" loading="lazy">
+                    <span>The Wolf Among Us</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">18k</td>
+                <td class="orig">R$50,00</td>
+                <td class="sale">R$30,00</td>
+                <td class="low-ever">$3.74</td>
+                <td class="score">4.97</td>
+              </tr>
+              <tr>
+                <td class="rank">23</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1942280/Brotato/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1942280/6165a15f07dda4b755fd1b29aefd411710318119/capsule_231x87.jpg?t=1775134848" alt="" loading="lazy">
+                    <span>Brotato</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-30%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">30k</td>
+                <td class="orig">R$16,99</td>
+                <td class="sale">R$11,89</td>
+                <td class="low-ever">$2.99</td>
+                <td class="score">4.94</td>
+              </tr>
+              <tr>
+                <td class="rank">24</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/557600/Gorogoa/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/557600/capsule_231x87.jpg?t=1729099787" alt="" loading="lazy">
+                    <span>Gorogoa</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-75%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$43,99</td>
+                <td class="sale">R$10,99</td>
+                <td class="low-ever">$2.85</td>
+                <td class="score">4.87</td>
+              </tr>
+              <tr>
+                <td class="rank">25</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1948280/Stacklands/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1948280/capsule_231x87.jpg?t=1769357052" alt="" loading="lazy">
+                    <span>Stacklands</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">95%</td>
+                <td class="reviews">12k</td>
+                <td class="orig">R$26,49</td>
+                <td class="sale">R$13,24</td>
+                <td class="low-ever">$3.49</td>
+                <td class="score">4.82</td>
+              </tr>
+              <tr>
+                <td class="rank">26</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/348550/GUILTY_GEAR_XX_ACCENT_CORE_PLUS_R/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/348550/capsule_231x87.jpg?t=1667365243" alt="" loading="lazy">
+                    <span>GUILTY GEAR XX ACCENT CORE PLUS R</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-75%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$27,99</td>
+                <td class="sale">R$6,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.80</td>
+              </tr>
+              <tr>
+                <td class="rank">27</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1931770/Chants_of_Sennaar/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1931770/capsule_231x87.jpg?t=1774006124" alt="" loading="lazy">
+                    <span>Chants of Sennaar</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">12k</td>
+                <td class="orig">R$69,00</td>
+                <td class="sale">R$41,40</td>
+                <td class="low-ever">$10.69</td>
+                <td class="score">4.79</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">28</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/531510/Just_Shapes__Beats/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/531510/capsule_231x87.jpg?t=1738790023" alt="" loading="lazy">
+                    <span>Just Shapes & Beats<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">13k</td>
+                <td class="orig">R$50,00</td>
+                <td class="sale">R$30,00</td>
+                <td class="low-ever">$11.99</td>
+                <td class="score">4.79</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">29</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2113850/Spirit_City_Lofi_Sessions/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2113850/97ff1d4d955cfe2313fadedd5de0fbb9453a69cc/capsule_231x87_alt_assets_8.jpg?t=1774273526" alt="" loading="lazy">
+                    <span>Spirit City: Lofi Sessions<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">9k</td>
+                <td class="orig">R$24,99</td>
+                <td class="sale">R$14,99</td>
+                <td class="low-ever">$7.19</td>
+                <td class="score">4.62</td>
+              </tr>
+              <tr>
+                <td class="rank">30</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1434480/MaitetsuLast_Run/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1434480/capsule_231x87.jpg?t=1725090956" alt="" loading="lazy">
+                    <span>Maitetsu:Last Run!!</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-58%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$119,99</td>
+                <td class="sale">R$50,39</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.55</td>
+              </tr>
+              <tr>
+                <td class="rank">31</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/880950/MaitetsuPure_Station/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/880950/capsule_231x87.jpg?t=1651693343" alt="" loading="lazy">
+                    <span>Maitetsu:Pure Station</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-70%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$147,49</td>
+                <td class="sale">R$44,24</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.53</td>
+              </tr>
+              <tr>
+                <td class="rank">32</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2366980/Thank_Goodness_Youre_Here/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2366980/capsule_231x87.jpg?t=1733154706" alt="" loading="lazy">
+                    <span>Thank Goodness You're Here!</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">6k</td>
+                <td class="orig">R$50,00</td>
+                <td class="sale">R$25,00</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.49</td>
+              </tr>
+              <tr>
+                <td class="rank">33</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2365810/Pseudoregalia/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2365810/capsule_231x87.jpg?t=1770075281" alt="" loading="lazy">
+                    <span>Pseudoregalia</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-20%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">13k</td>
+                <td class="orig">R$20,49</td>
+                <td class="sale">R$16,39</td>
+                <td class="low-ever">$4.19</td>
+                <td class="score">4.40</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">34</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3373660/Look_Outside/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3373660/e0dae146ff3f347de7f3d26d3cc59977a675cfd9/capsule_231x87.jpg?t=1773940368" alt="" loading="lazy">
+                    <span>Look Outside<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-30%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">8k</td>
+                <td class="orig">R$26,99</td>
+                <td class="sale">R$18,89</td>
+                <td class="low-ever">$6.99</td>
+                <td class="score">4.39</td>
+              </tr>
+              <tr>
+                <td class="rank">35</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/435400/Hidden_Folks/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/435400/capsule_231x87.jpg?t=1772365053" alt="" loading="lazy">
+                    <span>Hidden Folks</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$39,99</td>
+                <td class="sale">R$15,99</td>
+                <td class="low-ever">$2.47</td>
+                <td class="score">4.37</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">36</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1369340/Cats_Organized_Neatly/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1369340/capsule_231x87.jpg?t=1750324073" alt="" loading="lazy">
+                    <span>Cats Organized Neatly<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-67%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$6,49</td>
+                <td class="sale">R$2,14</td>
+                <td class="low-ever">$0.98</td>
+                <td class="score">4.33</td>
+              </tr>
+              <tr>
+                <td class="rank">37</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/851100/Touhou_Luna_Nights/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/851100/capsule_231x87.jpg?t=1738220939" alt="" loading="lazy">
+                    <span>Touhou Luna Nights</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$34,99</td>
+                <td class="sale">R$20,99</td>
+                <td class="low-ever">$9.59</td>
+                <td class="score">4.27</td>
+              </tr>
+              <tr>
+                <td class="rank">38</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1122720/Sayonara_Wild_Hearts/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1122720/5e726c1444cb0baccc43db708523168939c2843f/capsule_231x87.jpg?t=1759736011" alt="" loading="lazy">
+                    <span>Sayonara Wild Hearts</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$38,49</td>
+                <td class="sale">R$19,24</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.26</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">39</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2614070/NUKITASHI_2/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2614070/a69744995028739736eff46edac1fcd2419e674c/capsule_231x87.jpg?t=1759289259" alt="" loading="lazy">
+                    <span>NUKITASHI 2<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$73,99</td>
+                <td class="sale">R$29,59</td>
+                <td class="low-ever">$9.99</td>
+                <td class="score">4.26</td>
+              </tr>
+              <tr>
+                <td class="rank">40</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1138850/Heavenly_Bodies/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1138850/capsule_231x87.jpg?t=1764589319" alt="" loading="lazy">
+                    <span>Heavenly Bodies</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-66%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$77,99</td>
+                <td class="sale">R$26,51</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.25</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">41</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1574270/Sucker_for_Love_First_Date/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1574270/capsule_231x87.jpg?t=1730135477" alt="" loading="lazy">
+                    <span>Sucker for Love: First Date<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-60%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$20,69</td>
+                <td class="sale">R$8,27</td>
+                <td class="low-ever">$3.99</td>
+                <td class="score">4.23</td>
+              </tr>
+              <tr>
+                <td class="rank">42</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1285670/Post_Void/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1285670/e90b5fa546a0b9efdd4194e5aa7870fc7a4a50b1/capsule_231x87.jpg?t=1754509045" alt="" loading="lazy">
+                    <span>Post Void</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-20%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">8k</td>
+                <td class="orig">R$10,49</td>
+                <td class="sale">R$8,39</td>
+                <td class="low-ever">$1.49</td>
+                <td class="score">4.15</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">43</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1969080/A_Building_Full_of_Cats/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1969080/capsule_231x87.jpg?t=1749740618" alt="" loading="lazy">
+                    <span>A Building Full of Cats<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">99%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$5,90</td>
+                <td class="sale">R$2,95</td>
+                <td class="low-ever">$0.99</td>
+                <td class="score">4.09</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">44</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1070710/Kind_Words_lo_fi_chill_beats_to_write_to/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1070710/capsule_231x87.jpg?t=1733943033" alt="" loading="lazy">
+                    <span>Kind Words (lo fi chill beats to write to)<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-20%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">6k</td>
+                <td class="orig">R$16,99</td>
+                <td class="sale">R$13,59</td>
+                <td class="low-ever">$3.99</td>
+                <td class="score">4.08</td>
+              </tr>
+              <tr>
+                <td class="rank">45</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3094010/HENPRI/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3094010/b7fbf7c827906bda53d7d49e8f8531b54586fe94/capsule_231x87.jpg?t=1755485731" alt="" loading="lazy">
+                    <span>HENPRI</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$73,99</td>
+                <td class="sale">R$44,39</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.07</td>
+              </tr>
+              <tr>
+                <td class="rank">46</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1407420/Milo_and_the_Magpies/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1407420/capsule_231x87.jpg?t=1703496388" alt="" loading="lazy">
+                    <span>Milo and the Magpies</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-50%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$10,49</td>
+                <td class="sale">R$5,24</td>
+                <td class="low-ever">$0.99</td>
+                <td class="score">4.05</td>
+              </tr>
+              <tr>
+                <td class="rank">47</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2070550/A_Castle_Full_of_Cats/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2070550/capsule_231x87.jpg?t=1764106481" alt="" loading="lazy">
+                    <span>A Castle Full of Cats</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-40%</td>
+                <td class="pct">99%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$12,90</td>
+                <td class="sale">R$7,74</td>
+                <td class="low-ever">$1.99</td>
+                <td class="score">4.00</td>
+              </tr>
+              <tr>
+                <td class="rank">48</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3191050/BRAZILIAN_DRUG_DEALER_3_I_OPENED_A_PORTAL_TO_HELL_IN_THE_FAVELA_TRYING_TO_REVIVE_MIT_AIA_I_NEED_TO_CLOSE_IT/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3191050/9aaee06e6d351e297cfa6164306de149427fe53c/capsule_231x87.jpg?t=1775827256" alt="" loading="lazy">
+                    <span>BRAZILIAN DRUG DEALER 3: I OPENED A PORTAL TO HELL IN THE FAVELA TRYING TO REVIVE MIT AIA I NEED TO CLOSE IT</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-25%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$19,99</td>
+                <td class="sale">R$14,99</td>
+                <td class="low-ever">$2.09</td>
+                <td class="score">3.99</td>
+              </tr>
+              <tr>
+                <td class="rank">49</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3371240/Beyond_Citadel/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3371240/fd3f7f5ed23123615225bc744b57fd5565184ddc/capsule_231x87.jpg?t=1735841818" alt="" loading="lazy">
+                    <span>Beyond Citadel</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-43%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$64,79</td>
+                <td class="sale">R$37,20</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.97</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">50</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3862670/Shelldiver/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3862670/4ffb6685d97f5427df16cc85804ef2845fb5b4ea/capsule_231x87.jpg?t=1773759428" alt="" loading="lazy">
+                    <span>Shelldiver<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-30%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$9,99</td>
+                <td class="sale">R$6,99</td>
+                <td class="low-ever">$3.49</td>
+                <td class="score">3.97</td>
+              </tr>
+              <tr>
+                <td class="rank">51</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1609230/Scarlet_Hollow/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1609230/04f5a3975b399c174de0708f1da9b89e78872cf9/capsule_231x87.jpg?t=1775751742" alt="" loading="lazy">
+                    <span>Scarlet Hollow</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-25%</td>
+                <td class="pct">98%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$69,99</td>
+                <td class="sale">R$52,49</td>
+                <td class="low-ever">$15.99</td>
+                <td class="score">3.92</td>
+              </tr>
+              <tr>
+                <td class="rank">52</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/367580/Hook/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/367580/capsule_231x87.jpg?t=1728467031" alt="" loading="lazy">
+                    <span>Hook</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-20%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$10,49</td>
+                <td class="sale">R$8,39</td>
+                <td class="low-ever">$0.66</td>
+                <td class="score">3.79</td>
+              </tr>
+              <tr>
+                <td class="rank">53</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2060160/The_Farmer_Was_Replaced/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2060160/12f2add76581b250df67d45572754cf7152fe05d/capsule_231x87.jpg?t=1776078390" alt="" loading="lazy">
+                    <span>The Farmer Was Replaced</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-20%</td>
+                <td class="pct">96%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$30,99</td>
+                <td class="sale">R$24,79</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.74</td>
+              </tr>
+              <tr class="hist-low">
+                <td class="rank">54</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2238470/Grimshire/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2238470/bb48e6f199cf0e7366d221d59fe16790e4d49e90/capsule_231x87.jpg?t=1775372057" alt="" loading="lazy">
+                    <span>Grimshire<span class="low-badge">BAIXA HISTÓRICA</span></span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#4fc24f">-20%</td>
+                <td class="pct">97%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$46,99</td>
+                <td class="sale">R$37,59</td>
+                <td class="low-ever">$11.99</td>
+                <td class="score">3.54</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="block">
+          <div class="block-header" style="background:#66c0f4">
+            <span class="block-name">Very Positive</span>
+            <span class="block-count">41 jogos</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Desconto</th>
+                <th>Review%</th>
+                <th>Reviews</th>
+                <th>Preço Original</th>
+                <th>Preço Promo</th>
+                <th>Low Ever (USD)</th>
+                <th>Score ▼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank">1</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/sub/1252652/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/1252652/82f1e7eed3419868ac6306c5e5da642302c95a1c/capsule_231x87.jpg?t=1741978493" alt="" loading="lazy">
+                    <span>Resident Evil 7 Gold Edition & Village Gold Edition</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">94%</td>
+                <td class="reviews">188k</td>
+                <td class="orig">R$349,00</td>
+                <td class="sale">R$87,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.82</td>
+              </tr>
+              <tr>
+                <td class="rank">2</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/239140/Dying_Light/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/239140/2f76ff4a0212ecf8d7a2096f91cd2a0e9235e3ee/capsule_231x87.jpg?t=1771490504" alt="" loading="lazy">
+                    <span>Dying Light</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-80%</td>
+                <td class="pct">94%</td>
+                <td class="reviews">96k</td>
+                <td class="orig">R$99,00</td>
+                <td class="sale">R$19,80</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.56</td>
+              </tr>
+              <tr>
+                <td class="rank">3</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/582010/Monster_Hunter_World/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/582010/capsule_231x87.jpg?t=1773328926" alt="" loading="lazy">
+                    <span>Monster Hunter: World</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-74%</td>
+                <td class="pct">92%</td>
+                <td class="reviews">114k</td>
+                <td class="orig">R$129,00</td>
+                <td class="sale">R$33,54</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.37</td>
+              </tr>
+              <tr>
+                <td class="rank">4</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/518790/theHunter_Call_of_the_Wild/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/518790/daadb8f769703de53b46ba2e7ff60fad487c0b5d/capsule_231x87_alt_assets_27.jpg?t=1775735343" alt="" loading="lazy">
+                    <span>theHunter: Call of the Wild™</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-90%</td>
+                <td class="pct">90%</td>
+                <td class="reviews">62k</td>
+                <td class="orig">R$59,99</td>
+                <td class="sale">R$5,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.25</td>
+              </tr>
+              <tr>
+                <td class="rank">5</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/945360/Among_Us/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/945360/capsule_231x87.jpg?t=1757444903" alt="" loading="lazy">
+                    <span>Among Us</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-40%</td>
+                <td class="pct">92%</td>
+                <td class="reviews">371k</td>
+                <td class="orig">R$14,99</td>
+                <td class="sale">R$8,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.15</td>
+              </tr>
+              <tr>
+                <td class="rank">6</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/323190/Frostpunk/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/323190/45bfdc7f6b60b2acab44cc96c488f938219c42fd/capsule_231x87.jpg?t=1775495730" alt="" loading="lazy">
+                    <span>Frostpunk</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-90%</td>
+                <td class="pct">92%</td>
+                <td class="reviews">38k</td>
+                <td class="orig">R$88,99</td>
+                <td class="sale">R$8,89</td>
+                <td class="low-ever">—</td>
+                <td class="score">6.11</td>
+              </tr>
+              <tr>
+                <td class="rank">7</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/703080/Planet_Zoo/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/703080/capsule_231x87.jpg?t=1765896213" alt="" loading="lazy">
+                    <span>Planet Zoo</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">91%</td>
+                <td class="reviews">42k</td>
+                <td class="orig">R$100,00</td>
+                <td class="sale">R$25,00</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.78</td>
+              </tr>
+              <tr>
+                <td class="rank">8</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/246620/Plague_Inc_Evolved/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/246620/75f7b093b2c2b6379de75d061cbf002c7f1ae879/capsule_231x87_alt_assets_2.jpg?t=1775663014" alt="" loading="lazy">
+                    <span>Plague Inc: Evolved</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-80%</td>
+                <td class="pct">93%</td>
+                <td class="reviews">25k</td>
+                <td class="orig">R$46,99</td>
+                <td class="sale">R$9,39</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.72</td>
+              </tr>
+              <tr>
+                <td class="rank">9</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/sub/692569/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/692569/capsule_231x87.jpg?t=1661817293" alt="" loading="lazy">
+                    <span>Monster Hunter Rise + Sunbreak</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-84%</td>
+                <td class="pct">82%</td>
+                <td class="reviews">81k</td>
+                <td class="orig">R$259,00</td>
+                <td class="sale">R$41,44</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.72</td>
+              </tr>
+              <tr>
+                <td class="rank">10</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2183900/Warhammer_40000_Space_Marine_2/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2183900/capsule_231x87.jpg?t=1774004924" alt="" loading="lazy">
+                    <span>Warhammer 40,000: Space Marine 2</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-67%</td>
+                <td class="pct">86%</td>
+                <td class="reviews">90k</td>
+                <td class="orig">R$199,90</td>
+                <td class="sale">R$65,96</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.69</td>
+              </tr>
+              <tr>
+                <td class="rank">11</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/254700/Resident_Evil_4_2005/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/254700/capsule_231x87.jpg?t=1768960618" alt="" loading="lazy">
+                    <span>Resident Evil 4 (2005)</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">93%</td>
+                <td class="reviews">25k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$22,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.63</td>
+              </tr>
+              <tr>
+                <td class="rank">12</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/412020/Metro_Exodus/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/412020/capsule_231x87.jpg?t=1750772804" alt="" loading="lazy">
+                    <span>Metro Exodus</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-85%</td>
+                <td class="pct">87%</td>
+                <td class="reviews">33k</td>
+                <td class="orig">R$149,00</td>
+                <td class="sale">R$22,35</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.61</td>
+              </tr>
+              <tr>
+                <td class="rank">13</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/397540/Borderlands_3/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/397540/capsule_231x87.jpg?t=1750802377" alt="" loading="lazy">
+                    <span>Borderlands 3</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-90%</td>
+                <td class="pct">81%</td>
+                <td class="reviews">60k</td>
+                <td class="orig">R$119,90</td>
+                <td class="sale">R$11,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.61</td>
+              </tr>
+              <tr>
+                <td class="rank">14</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/275850/No_Mans_Sky/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/275850/09fd1748e1dcbe1e39802cf18d8ca1b83a999792/capsule_231x87_alt_assets_25.jpg?t=1775653502" alt="" loading="lazy">
+                    <span>No Man's Sky</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-60%</td>
+                <td class="pct">81%</td>
+                <td class="reviews">179k</td>
+                <td class="orig">R$162,00</td>
+                <td class="sale">R$64,80</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.53</td>
+              </tr>
+              <tr>
+                <td class="rank">15</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1446780/MONSTER_HUNTER_RISE/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1446780/capsule_231x87.jpg?t=1768870444" alt="" loading="lazy">
+                    <span>MONSTER HUNTER RISE</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-80%</td>
+                <td class="pct">87%</td>
+                <td class="reviews">33k</td>
+                <td class="orig">R$169,00</td>
+                <td class="sale">R$33,80</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.51</td>
+              </tr>
+              <tr>
+                <td class="rank">16</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/418370/Resident_Evil_7_Biohazard/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/418370/capsule_231x87.jpg?t=1770931202" alt="" loading="lazy">
+                    <span>Resident Evil 7 Biohazard</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-60%</td>
+                <td class="pct">94%</td>
+                <td class="reviews">30k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$35,60</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.48</td>
+              </tr>
+              <tr>
+                <td class="rank">17</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/815370/Green_Hell/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/815370/11b2c1dd531149d24a276ea0abae5f05b966f781/capsule_231x87.jpg?t=1774600969" alt="" loading="lazy">
+                    <span>Green Hell</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-90%</td>
+                <td class="pct">85%</td>
+                <td class="reviews">26k</td>
+                <td class="orig">R$82,00</td>
+                <td class="sale">R$8,20</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.43</td>
+              </tr>
+              <tr>
+                <td class="rank">18</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/599140/Graveyard_Keeper/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/599140/cd8cb8097f236a6cfcaa2a08381f31775693fac1/capsule_231x87_alt_assets_3.jpg?t=1776067150" alt="" loading="lazy">
+                    <span>Graveyard Keeper</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-100%</td>
+                <td class="pct">84%</td>
+                <td class="reviews">17k</td>
+                <td class="orig">R$59,99</td>
+                <td class="sale">R$0,00</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.33</td>
+              </tr>
+              <tr>
+                <td class="rank">19</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/952060/Resident_Evil_3/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/952060/capsule_231x87.jpg?t=1768956538" alt="" loading="lazy">
+                    <span>Resident Evil 3</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-90%</td>
+                <td class="pct">82%</td>
+                <td class="reviews">29k</td>
+                <td class="orig">R$169,00</td>
+                <td class="sale">R$16,90</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.31</td>
+              </tr>
+              <tr>
+                <td class="rank">20</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/12210/Grand_Theft_Auto_IV_The_Complete_Edition/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/12210/capsule_231x87.jpg?t=1721061564" alt="" loading="lazy">
+                    <span>Grand Theft Auto IV: The Complete Edition</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-70%</td>
+                <td class="pct">81%</td>
+                <td class="reviews">69k</td>
+                <td class="orig">R$79,00</td>
+                <td class="sale">R$23,70</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.29</td>
+              </tr>
+              <tr>
+                <td class="rank">21</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1384160/GUILTY_GEAR_STRIVE/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1384160/078c6f623ab033c4671a61c1f5391a1a915c7576/capsule_231x87.jpg?t=1775722103" alt="" loading="lazy">
+                    <span>GUILTY GEAR -STRIVE-</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-50%</td>
+                <td class="pct">92%</td>
+                <td class="reviews">32k</td>
+                <td class="orig">R$173,99</td>
+                <td class="sale">R$86,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.18</td>
+              </tr>
+              <tr>
+                <td class="rank">22</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/304240/Resident_Evil/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/304240/capsule_231x87.jpg?t=1768956401" alt="" loading="lazy">
+                    <span>Resident Evil</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">91%</td>
+                <td class="reviews">12k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$22,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.11</td>
+              </tr>
+              <tr>
+                <td class="rank">23</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/346110/ARK_Survival_Evolved/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/346110/capsule_231x87.jpg?t=1765677889" alt="" loading="lazy">
+                    <span>ARK: Survival Evolved</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-34%</td>
+                <td class="pct">80%</td>
+                <td class="reviews">254k</td>
+                <td class="orig">R$46,99</td>
+                <td class="sale">R$31,01</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.06</td>
+              </tr>
+              <tr>
+                <td class="rank">24</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1621690/Core_Keeper/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1621690/5b19828e142f23d88e5213280d8e226408dabbbf/capsule_231x87.jpg?t=1772726173" alt="" loading="lazy">
+                    <span>Core Keeper</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-40%</td>
+                <td class="pct">94%</td>
+                <td class="reviews">23k</td>
+                <td class="orig">R$59,99</td>
+                <td class="sale">R$35,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.91</td>
+              </tr>
+              <tr>
+                <td class="rank">25</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2138710/Sifu/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2138710/capsule_231x87.jpg?t=1754555101" alt="" loading="lazy">
+                    <span>Sifu</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">92%</td>
+                <td class="reviews">7k</td>
+                <td class="orig">R$75,99</td>
+                <td class="sale">R$18,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.90</td>
+              </tr>
+              <tr>
+                <td class="rank">26</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/21690/Resident_Evil_5/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/21690/capsule_231x87.jpg?t=1768960574" alt="" loading="lazy">
+                    <span>Resident Evil 5</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">84%</td>
+                <td class="reviews">17k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$22,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.88</td>
+              </tr>
+              <tr>
+                <td class="rank">27</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/784150/Workers__Resources_Soviet_Republic/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/784150/capsule_231x87.jpg?t=1776071608" alt="" loading="lazy">
+                    <span>Workers & Resources: Soviet Republic</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-75%</td>
+                <td class="pct">89%</td>
+                <td class="reviews">8k</td>
+                <td class="orig">R$79,99</td>
+                <td class="sale">R$19,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.79</td>
+              </tr>
+              <tr>
+                <td class="rank">28</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1363080/Manor_Lords/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1363080/capsule_231x87.jpg?t=1776071570" alt="" loading="lazy">
+                    <span>Manor Lords</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-35%</td>
+                <td class="pct">87%</td>
+                <td class="reviews">38k</td>
+                <td class="orig">R$79,99</td>
+                <td class="sale">R$51,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.68</td>
+              </tr>
+              <tr>
+                <td class="rank">29</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2784470/9_Kings/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2784470/52914cecbaa148fd0533aff3c5297306757cd4a0/capsule_231x87.jpg?t=1776071809" alt="" loading="lazy">
+                    <span>9 Kings</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-50%</td>
+                <td class="pct">93%</td>
+                <td class="reviews">9k</td>
+                <td class="orig">R$39,99</td>
+                <td class="sale">R$19,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.59</td>
+              </tr>
+              <tr>
+                <td class="rank">30</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1401590/Disney_Dreamlight_Valley/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1401590/26edbb508b4f85c33cd019f35bfd803632669bec/capsule_231x87_alt_assets_7.jpg?t=1775676987" alt="" loading="lazy">
+                    <span>Disney Dreamlight Valley</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-30%</td>
+                <td class="pct">91%</td>
+                <td class="reviews">15k</td>
+                <td class="orig">R$147,45</td>
+                <td class="sale">R$103,21</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.37</td>
+              </tr>
+              <tr>
+                <td class="rank">31</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3314790/CloverPit/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3314790/155ad421612945f71647fab095f8229d364aa21d/capsule_231x87_alt_assets_1.jpg?t=1775754157" alt="" loading="lazy">
+                    <span>CloverPit</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-30%</td>
+                <td class="pct">90%</td>
+                <td class="reviews">11k</td>
+                <td class="orig">R$32,99</td>
+                <td class="sale">R$23,09</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.19</td>
+              </tr>
+              <tr>
+                <td class="rank">32</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/4069520/Super_Battle_Golf/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4069520/6fdc5e408fbfac8dc66d36b30de303aa3fdfacbc/capsule_231x87_alt_assets_0.jpg?t=1775742992" alt="" loading="lazy">
+                    <span>Super Battle Golf</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-30%</td>
+                <td class="pct">94%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$19,99</td>
+                <td class="sale">R$13,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.99</td>
+              </tr>
+              <tr>
+                <td class="rank">33</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2071280/Ravenswatch/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2071280/7c03b1bafb313fb04331fa735ec4101b2f812286/capsule_231x87.jpg?t=1775553806" alt="" loading="lazy">
+                    <span>Ravenswatch</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-40%</td>
+                <td class="pct">85%</td>
+                <td class="reviews">8k</td>
+                <td class="orig">R$74,99</td>
+                <td class="sale">R$44,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.96</td>
+              </tr>
+              <tr>
+                <td class="rank">34</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2958130/Jurassic_World_Evolution_3/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2958130/767bbed48a0426d14562f4aba32bd30abefb79ec/capsule_231x87.jpg?t=1770121149" alt="" loading="lazy">
+                    <span>Jurassic World Evolution 3</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-25%</td>
+                <td class="pct">93%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$226,00</td>
+                <td class="sale">R$169,50</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.91</td>
+              </tr>
+              <tr>
+                <td class="rank">35</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2289750/Super_Fantasy_Kingdom/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2289750/1a3a0d403ae0e924f56f5008d4b914e1c0d81343/capsule_231x87.jpg?t=1776071932" alt="" loading="lazy">
+                    <span>Super Fantasy Kingdom</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-50%</td>
+                <td class="pct">89%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$39,99</td>
+                <td class="sale">R$19,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.83</td>
+              </tr>
+              <tr>
+                <td class="rank">36</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2300320/Farming_Simulator_25/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2300320/f56e9279a16ad2f6a0532a7ef72042d7428c00c7/capsule_231x87.jpg?t=1775646645" alt="" loading="lazy">
+                    <span>Farming Simulator 25</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-20%</td>
+                <td class="pct">84%</td>
+                <td class="reviews">13k</td>
+                <td class="orig">R$143,95</td>
+                <td class="sale">R$115,16</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.81</td>
+              </tr>
+              <tr>
+                <td class="rank">37</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2781620/Risk_of_Rain_2_Alloyed_Collective/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2781620/182e8dfd04fd1c8ab5693d1defebf4647cd261ed/capsule_231x87.jpg?t=1763508164" alt="" loading="lazy">
+                    <span>Risk of Rain 2: Alloyed Collective</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-20%</td>
+                <td class="pct">94%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$28,99</td>
+                <td class="sale">R$23,19</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.56</td>
+              </tr>
+              <tr>
+                <td class="rank">38</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2119830/MISERY/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2119830/9ac5fcd5ec0de485a101d31385aeb4c7ca6fdbd5/capsule_231x87.jpg?t=1775596198" alt="" loading="lazy">
+                    <span>MISERY</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-25%</td>
+                <td class="pct">82%</td>
+                <td class="reviews">6k</td>
+                <td class="orig">R$39,99</td>
+                <td class="sale">R$29,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.48</td>
+              </tr>
+              <tr>
+                <td class="rank">39</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1631270/StarRupture/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1631270/574fc3eb0de68f9350cab375774b00e7e47efe27/capsule_231x87_alt_assets_3.jpg?t=1775728895" alt="" loading="lazy">
+                    <span>StarRupture</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-20%</td>
+                <td class="pct">82%</td>
+                <td class="reviews">6k</td>
+                <td class="orig">R$79,99</td>
+                <td class="sale">R$63,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.39</td>
+              </tr>
+              <tr>
+                <td class="rank">40</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3419520/Quarantine_Zone_The_Last_Check/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3419520/41cb8a811384fe060753e7b4ceac35b2976e8101/capsule_231x87.jpg?t=1774024021" alt="" loading="lazy">
+                    <span>Quarantine Zone: The Last Check</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-20%</td>
+                <td class="pct">81%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$59,99</td>
+                <td class="sale">R$47,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.28</td>
+              </tr>
+              <tr>
+                <td class="rank">41</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1963610/Road_to_Vostok/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1963610/capsule_231x87.jpg?t=1775573759" alt="" loading="lazy">
+                    <span>Road to Vostok</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#66c0f4">-25%</td>
+                <td class="pct">82%</td>
+                <td class="reviews">3k</td>
+                <td class="orig">R$59,99</td>
+                <td class="sale">R$44,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.15</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="block">
+          <div class="block-header" style="background:#a4d4a4">
+            <span class="block-name">Mostly Positive</span>
+            <span class="block-count">12 jogos</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Desconto</th>
+                <th>Review%</th>
+                <th>Reviews</th>
+                <th>Preço Original</th>
+                <th>Preço Promo</th>
+                <th>Low Ever (USD)</th>
+                <th>Score ▼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank">1</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/534380/Dying_Light_2_Stay_Human_Reloaded_Edition/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/534380/e67370be55f518fbfb3dd41a6718e06ddcded4d2/capsule_231x87.jpg?t=1772550031" alt="" loading="lazy">
+                    <span>Dying Light 2 Stay Human: Reloaded Edition</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-75%</td>
+                <td class="pct">78%</td>
+                <td class="reviews">67k</td>
+                <td class="orig">R$249,00</td>
+                <td class="sale">R$62,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">5.18</td>
+              </tr>
+              <tr>
+                <td class="rank">2</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/427290/Vampyr/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/427290/capsule_231x87.jpg?t=1773669973" alt="" loading="lazy">
+                    <span>Vampyr</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-90%</td>
+                <td class="pct">76%</td>
+                <td class="reviews">9k</td>
+                <td class="orig">R$139,90</td>
+                <td class="sale">R$13,99</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.34</td>
+              </tr>
+              <tr>
+                <td class="rank">3</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1118010/Monster_Hunter_World_Iceborne/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1118010/capsule_231x87.jpg?t=1727684185" alt="" loading="lazy">
+                    <span>Monster Hunter World: Iceborne</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-85%</td>
+                <td class="pct">78%</td>
+                <td class="reviews">6k</td>
+                <td class="orig">R$169,00</td>
+                <td class="sale">R$25,35</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.18</td>
+              </tr>
+              <tr>
+                <td class="rank">4</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/221040/Resident_Evil_6/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/221040/capsule_231x87.jpg?t=1768960676" alt="" loading="lazy">
+                    <span>Resident Evil 6</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-75%</td>
+                <td class="pct">72%</td>
+                <td class="reviews">15k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$22,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.12</td>
+              </tr>
+              <tr>
+                <td class="rank">5</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/287290/Resident_Evil_Revelations_2/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/287290/capsule_231x87.jpg?t=1769125412" alt="" loading="lazy">
+                    <span>Resident Evil Revelations 2</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-75%</td>
+                <td class="pct">75%</td>
+                <td class="reviews">6k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$22,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.93</td>
+              </tr>
+              <tr>
+                <td class="rank">6</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/339340/Resident_Evil_0/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/339340/capsule_231x87.jpg?t=1768953920" alt="" loading="lazy">
+                    <span>Resident Evil 0</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-75%</td>
+                <td class="pct">76%</td>
+                <td class="reviews">5k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$22,25</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.88</td>
+              </tr>
+              <tr>
+                <td class="rank">7</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1601580/Frostpunk_2/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1601580/2c5b053c630a9cb57fa71e6eb018c2a0b008c05b/capsule_231x87.jpg?t=1775724802" alt="" loading="lazy">
+                    <span>Frostpunk 2</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-50%</td>
+                <td class="pct">78%</td>
+                <td class="reviews">9k</td>
+                <td class="orig">R$119,95</td>
+                <td class="sale">R$59,97</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.86</td>
+              </tr>
+              <tr>
+                <td class="rank">8</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1547000/Grand_Theft_Auto_San_Andreas__The_Definitive_Edition/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1547000/capsule_231x87.jpg?t=1741117455" alt="" loading="lazy">
+                    <span>Grand Theft Auto: San Andreas – The Definitive Edition</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-67%</td>
+                <td class="pct">77%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$299,90</td>
+                <td class="sale">R$98,96</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.72</td>
+              </tr>
+              <tr>
+                <td class="rank">9</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2138720/REMATCH/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2138720/99d71852c4c1133b8483eb26d0632aa574c5ca82/capsule_231x87.jpg?t=1774538788" alt="" loading="lazy">
+                    <span>REMATCH</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-40%</td>
+                <td class="pct">70%</td>
+                <td class="reviews">15k</td>
+                <td class="orig">R$89,00</td>
+                <td class="sale">R$53,40</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.52</td>
+              </tr>
+              <tr>
+                <td class="rank">10</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1455630/THE_GAME_OF_LIFE_2/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1455630/be37e364a1197a87a5f3d1d250e2c9fb74c340d8/capsule_231x87.jpg?t=1771004574" alt="" loading="lazy">
+                    <span>THE GAME OF LIFE 2</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-70%</td>
+                <td class="pct">77%</td>
+                <td class="reviews">2k</td>
+                <td class="orig">R$30,99</td>
+                <td class="sale">R$9,29</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.49</td>
+              </tr>
+              <tr>
+                <td class="rank">11</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3472040/NBA_2K26/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3472040/f65e6d5362253c14af2581da47e04093621dd92a/capsule_231x87_alt_assets_4.jpg?t=1775257702" alt="" loading="lazy">
+                    <span>NBA 2K26</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-33%</td>
+                <td class="pct">74%</td>
+                <td class="reviews">8k</td>
+                <td class="orig">R$553,66</td>
+                <td class="sale">R$372,94</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.38</td>
+              </tr>
+              <tr>
+                <td class="rank">12</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1766060/HumanitZ/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1766060/0d5e3fcaf999e6ba77e02b1058b91095e13a23b9/capsule_231x87.jpg?t=1770400758" alt="" loading="lazy">
+                    <span>HumanitZ</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#a4d4a4">-40%</td>
+                <td class="pct">73%</td>
+                <td class="reviews">4k</td>
+                <td class="orig">R$57,99</td>
+                <td class="sale">R$34,79</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.14</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="block">
+          <div class="block-header" style="background:#f5c518">
+            <span class="block-name">Mixed</span>
+            <span class="block-count">5 jogos</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Desconto</th>
+                <th>Review%</th>
+                <th>Reviews</th>
+                <th>Preço Original</th>
+                <th>Preço Promo</th>
+                <th>Low Ever (USD)</th>
+                <th>Score ▼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank">1</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2246340/Monster_Hunter_Wilds/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2246340/970508d58e4f11f6f9ff3e2921b7eec558a50af8/capsule_231x87.jpg?t=1771382452" alt="" loading="lazy">
+                    <span>Monster Hunter Wilds</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#f5c518">-45%</td>
+                <td class="pct">69%</td>
+                <td class="reviews">81k</td>
+                <td class="orig">R$279,00</td>
+                <td class="sale">R$153,45</td>
+                <td class="low-ever">—</td>
+                <td class="score">4.15</td>
+              </tr>
+              <tr>
+                <td class="rank">2</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/2399830/ARK_Survival_Ascended/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2399830/dce348bb9faef2c1973d04aa8a87bff18e29699b/capsule_231x87.jpg?t=1766710980" alt="" loading="lazy">
+                    <span>ARK: Survival Ascended</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#f5c518">-75%</td>
+                <td class="pct">60%</td>
+                <td class="reviews">53k</td>
+                <td class="orig">R$220,00</td>
+                <td class="sale">R$55,00</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.90</td>
+              </tr>
+              <tr>
+                <td class="rank">3</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/269210/Hero_Siege/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/269210/a67b68889badee8faabde349007ceb7b00c7a408/capsule_231x87.jpg?t=1775210178" alt="" loading="lazy">
+                    <span>Hero Siege</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#f5c518">-66%</td>
+                <td class="pct">60%</td>
+                <td class="reviews">13k</td>
+                <td class="orig">R$26,49</td>
+                <td class="sale">R$9,00</td>
+                <td class="low-ever">—</td>
+                <td class="score">3.27</td>
+              </tr>
+              <tr>
+                <td class="rank">4</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/1295660/Sid_Meiers_Civilization_VII/?snr=1_7_7_2300_150_2" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1295660/56f256d5776521616d8842cd435f97b22de655cd/capsule_231x87.jpg?t=1770414576" alt="" loading="lazy">
+                    <span>Sid Meier's Civilization VII</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#f5c518">-40%</td>
+                <td class="pct">50%</td>
+                <td class="reviews">27k</td>
+                <td class="orig">R$349,90</td>
+                <td class="sale">R$209,94</td>
+                <td class="low-ever">—</td>
+                <td class="score">2.66</td>
+              </tr>
+              <tr>
+                <td class="rank">5</td>
+                <td class="name">
+                  <a href="https://store.steampowered.com/app/3405690/EA_SPORTS_FC_26/?snr=1_7_7_2300_150_1" target="_blank">
+                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3405690/abca0fd9695521a046d407327d82f808162315f7/capsule_231x87.jpg?t=1775577454" alt="" loading="lazy">
+                    <span>EA SPORTS FC™ 26</span>
+                  </a>
+                </td>
+                <td class="disc" style="color:#f5c518">-75%</td>
+                <td class="pct">46%</td>
+                <td class="reviews">16k</td>
+                <td class="orig">R$379,00</td>
+                <td class="sale">R$94,75</td>
+                <td class="low-ever">—</td>
+                <td class="score">2.66</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  <footer>
+    Fórmula: qualidade × fama × bônus de desconto.<br>
+    O desconto pesa 50% do seu valor real para não suplantar qualidade e popularidade.
+  </footer>
+</body>
+</html>
