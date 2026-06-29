@@ -11,6 +11,11 @@ let PAYLOAD = null;
 let WISHLIST = new Set();
 let OWNED = new Set();
 let COMPARE_ACTIVE = false;
+// Modo "ver apenas wishlist" (filtro dinâmico após comparar perfil)
+let WISHLIST_ONLY = false;
+
+// Por padrão a lista mostra só score 6–10; o resto fica num "Ver mais".
+const SCORE_CUTOFF = 6.0;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -77,19 +82,33 @@ function gameRow(g, rank, color) {
     </tr>`;
 }
 
-function blockHtml(block) {
+// Renderiza um bloco aplicando um filtro de faixa de score (ou só-wishlist).
+//   opts.mode: "top"  → só score ≥ SCORE_CUTOFF
+//              "tail" → só score < SCORE_CUTOFF
+//              "wishlist" → só jogos da wishlist (qualquer score)
+// O rank é a posição por score no bloco inteiro (estável entre as faixas).
+function blockHtml(block, opts) {
   const color = block.color || "#888";
+  const mode = (opts && opts.mode) || "top";
   let rows = "";
   let rank = 0;
   let visible = 0;
   for (const g of block.games) {
-    rank += 1; // rank fixo (posição por score), independe de filtro de owned
+    rank += 1; // posição por score no bloco completo (não depende do filtro)
+    const sc = Number(g.score);
+    if (mode === "wishlist") {
+      if (!WISHLIST.has(Number(g.appid))) continue;
+    } else if (mode === "top") {
+      if (sc < SCORE_CUTOFF) continue;
+    } else { // tail
+      if (sc >= SCORE_CUTOFF) continue;
+    }
     const r = gameRow(g, rank, color);
     if (r) { rows += r; visible += 1; }
   }
-  if (visible === 0) return ""; // bloco inteiro filtrado (tudo owned) → oculta
+  if (visible === 0) return { html: "", count: 0 };
 
-  return `
+  const html = `
     <div class="block">
       <div class="block-header" style="background:${color}">
         <span class="block-name">${escapeHtml(block.name)}</span>
@@ -113,16 +132,60 @@ function blockHtml(block) {
         </tbody>
       </table>
     </div>`;
+  return { html, count: visible };
 }
 
 function renderGames() {
   if (!PAYLOAD) return;
   const root = el("games-root");
-  let html = "";
-  for (const block of PAYLOAD.blocks || []) {
-    html += blockHtml(block);
+  const blocks = PAYLOAD.blocks || [];
+
+  // Modo "ver apenas wishlist": mostra todos os jogos da wishlist em promoção,
+  // sem corte de score (o usuário quer ver a wishlist inteira).
+  if (COMPARE_ACTIVE && WISHLIST_ONLY) {
+    let html = "";
+    for (const block of blocks) html += blockHtml(block, { mode: "wishlist" }).html;
+    root.innerHTML = html ||
+      '<div class="empty-tier">Nenhum jogo da sua wishlist está em promoção hoje.</div>';
+    return;
   }
-  root.innerHTML = html || '<div id="loading">Nenhum jogo a exibir.</div>';
+
+  // Modo normal: score 6–10 visível + faixa abaixo de 6 num "Ver mais".
+  let topHtml = "";
+  let tailHtml = "";
+  let tailCount = 0;
+  for (const block of blocks) {
+    topHtml += blockHtml(block, { mode: "top" }).html;
+    const t = blockHtml(block, { mode: "tail" });
+    tailHtml += t.html;
+    tailCount += t.count;
+  }
+
+  let html = topHtml || '<div class="empty-tier">Nenhum jogo com score 6–10 hoje.</div>';
+  if (tailHtml) {
+    html += `
+      <div class="tail-toggle-wrap">
+        <button id="tail-toggle" class="tail-toggle" data-count="${tailCount}" aria-expanded="false">
+          ▸ Ver mais ${tailCount} jogos (score abaixo de 6)
+        </button>
+      </div>
+      <div id="tail-section" class="tail-hidden">${tailHtml}</div>`;
+  }
+  root.innerHTML = html;
+  const tt = el("tail-toggle");
+  if (tt) tt.addEventListener("click", toggleTail);
+}
+
+function toggleTail() {
+  const sec = el("tail-section");
+  const btn = el("tail-toggle");
+  if (!sec || !btn) return;
+  const opened = sec.classList.toggle("tail-hidden") === false;
+  btn.setAttribute("aria-expanded", String(opened));
+  const n = btn.dataset.count || "";
+  btn.textContent = opened
+    ? `▾ Ocultar os ${n} jogos com score abaixo de 6`
+    : `▸ Ver mais ${n} jogos (score abaixo de 6)`;
 }
 
 function renderSubtitle() {
@@ -191,9 +254,13 @@ async function compareProfile() {
     WISHLIST = new Set((data.wishlist || []).map(Number));
     OWNED = new Set((data.owned || []).map(Number));
     COMPARE_ACTIVE = true;
+    WISHLIST_ONLY = false;          // sempre começa mostrando tudo
+    resetWishlistOnlyBtn();
 
     renderGames();
     el("clear-btn").classList.remove("hidden");
+    // botão de filtro só-wishlist só faz sentido se há wishlist
+    el("wishonly-btn").classList.toggle("hidden", WISHLIST.size === 0);
 
     let msg = `Wishlist: ${WISHLIST.size} jogos (grifados em azul)`;
     msg += OWNED.size
@@ -222,8 +289,26 @@ function clearProfile() {
   WISHLIST = new Set();
   OWNED = new Set();
   COMPARE_ACTIVE = false;
+  WISHLIST_ONLY = false;
   el("clear-btn").classList.add("hidden");
+  el("wishonly-btn").classList.add("hidden");
+  resetWishlistOnlyBtn();
   setStatus("", "info");
+  renderGames();
+}
+
+// Botão "ver apenas wishlist" — filtra dinamicamente (re-render, sem nova busca).
+function resetWishlistOnlyBtn() {
+  const b = el("wishonly-btn");
+  if (b) { b.textContent = "★ Ver apenas wishlist"; b.classList.remove("active"); }
+}
+
+function toggleWishlistOnly() {
+  if (!COMPARE_ACTIVE) return;
+  WISHLIST_ONLY = !WISHLIST_ONLY;
+  const b = el("wishonly-btn");
+  b.textContent = WISHLIST_ONLY ? "✕ Ver todos os jogos" : "★ Ver apenas wishlist";
+  b.classList.toggle("active", WISHLIST_ONLY);
   renderGames();
 }
 
@@ -232,6 +317,7 @@ function clearProfile() {
 document.addEventListener("DOMContentLoaded", () => {
   el("profile-btn").addEventListener("click", compareProfile);
   el("clear-btn").addEventListener("click", clearProfile);
+  el("wishonly-btn").addEventListener("click", toggleWishlistOnly);
   el("profile-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") compareProfile();
   });

@@ -255,3 +255,32 @@ footer {
 }
 #error-box { color: #f06c6c; }
 .hidden { display: none !important; }
+
+/* Botão "ver apenas wishlist" ativo */
+.profile-search button.secondary.active {
+  background: #2a6fb0;
+  color: #eaf4ff;
+}
+.profile-search button.secondary.active:hover { background: #3380c9; }
+
+/* Faixa de score < 6 colapsada + botão "Ver mais" */
+.tail-hidden { display: none; }
+.tail-toggle-wrap { text-align: center; margin: 20px 0 8px; }
+.tail-toggle {
+  background: #16202d;
+  color: #9fb3c6;
+  border: 1px solid #2a3f57;
+  border-radius: 6px;
+  padding: 11px 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tail-toggle:hover { background: #1d2b3c; color: #c7d5e0; border-color: #66c0f4; }
+
+.empty-tier {
+  padding: 30px 10px;
+  color: #8f98a0;
+  font-size: 0.95rem;
+  text-align: center;
+}

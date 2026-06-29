@@ -11,12 +11,14 @@ Steam Sale Ranker
 =================
 Lista jogos em promoção na Steam ordenados por score composto.
 
-Fórmula:
-  score = (review% / 100) × log10(total_reviews + 1) × (1 + desconto / 200)
+Fórmula (score normalizado 0–10):
+  score = 10 × qualidade × (0.75 + 0.25·fama) × (0.80 + 0.20·desconto)
 
-  - review%   : qualidade percebida (peso maior)
-  - log10(...)  : fama/popularidade (cresce devagar — 100k reviews ≠ 10x melhor que 10k)
-  - desconto  : bônus de 0.5% por ponto de desconto (50% off = +25% no score final)
+  - qualidade : limite inferior de Wilson 95% das reviews positivas — junta
+                "% positivas" + "nº de reviews" com confiança estatística
+                (95% de 200 vale menos que 95% de 200k). Núcleo do score.
+  - fama      : log10(reviews) saturando ~100k → modificador suave ×0.75–1.0
+  - desconto  : % de desconto → modificador ×0.80–1.0
 
 Blocos seguem a classificação oficial da Steam:
   Overwhelmingly Positive : 95%+  (500+ reviews)
@@ -117,13 +119,36 @@ CYAN  = "\033[96m"
 # ─── Score e classificação ────────────────────────────────────────────────────
 
 def calc_score(pct: int, total: int, discount: int) -> float:
-    """Score composto: qualidade × fama × bônus desconto."""
-    if total < 10 or pct == 0:
+    """
+    Score 0–10 para destacar BONS NEGÓCIOS (não só jogos caros e famosos).
+
+    Três fatores:
+      1) QUALIDADE com confiança — limite inferior de Wilson (95%) da proporção
+         de reviews positivas. Junta num só número "% positivas" + "nº de reviews":
+         95% de 200 reviews vale MENOS que 95% de 200 000 (menos certeza). Conserta
+         o defeito do score antigo, onde % e nº entravam soltos e um jogo nicho com
+         poucas reviews podia inflar.
+      2) FAMA — log das reviews, saturando ~100k. Modificador suave (×0.75–1.0):
+         popularidade conta, mas não domina nem zera um bom jogo.
+      3) DESCONTO — modificador ×0.80–1.0 conforme o % de desconto.
+
+    Núcleo = qualidade × 10; fama e desconto só modulam (−25% / −20% no pior caso).
+    Ref.: AAA 97% de 500k a 70% off ≈ 9.1 · nicho ótimo 95% de 800 a 75% off ≈ 7.9 ·
+    mediano 70% de 2k a 80% off ≈ 6.0.
+    """
+    if total < 10 or pct <= 0:
         return 0.0
-    quality        = pct / 100
-    fame           = math.log10(total + 1)
-    discount_bonus = 1.0 + (discount / 200.0)
-    return quality * fame * discount_bonus
+    p = pct / 100.0
+    n = float(total)
+    z = 1.96  # 95% de confiança
+    # Limite inferior de Wilson (0..1) — qualidade já ponderada pela confiança.
+    denom   = 1.0 + z * z / n
+    centre  = p + z * z / (2.0 * n)
+    margin  = z * math.sqrt((p * (1.0 - p) + z * z / (4.0 * n)) / n)
+    quality = (centre - margin) / denom
+    fame    = min(math.log10(n + 1.0) / 5.0, 1.0)        # satura ~100k reviews
+    disc    = max(0, min(discount, 100)) / 100.0
+    return 10.0 * quality * (0.75 + 0.25 * fame) * (0.80 + 0.20 * disc)
 
 
 def review_block(pct: int, total: int) -> str:
@@ -480,7 +505,7 @@ def print_results(by_block: dict[str, list[dict]], total_collected: int):
 
     print(f"\n{BOLD}{CYAN}{'═' * W}")
     print(f"  STEAM SALE RANKER  —  {datetime.now().strftime('%d/%m/%Y %H:%M')}")
-    print(f"  Score = (review%/100) × log10(reviews) × (1 + desconto/200)")
+    print(f"  Score 0-10 = qualidade(Wilson) × fama(log reviews) × bonus desconto")
     print(f"  Quanto maior, melhor a relação qualidade + fama + desconto")
     print(f"{'═' * W}{RESET}\n")
 
@@ -737,7 +762,7 @@ def generate_html(by_block: dict[str, list[dict]], total_collected: int) -> str:
   <h1>Steam Sale Ranker</h1>
   <div class="subtitle">Gerado em {now}  —  {total_collected} jogos coletados</div>
   <div class="formula">
-    score = (review% / 100) × log10(total_reviews + 1) × (1 + desconto / 200)
+    score 0–10 = qualidade(Wilson das reviews) × fama(log reviews) × bônus de desconto
   </div>
   <div class="legend">
     <span><span class="sw new"></span> <b>NEW</b> — entrou em promoção hoje (vs. ontem)</span>

@@ -12,7 +12,7 @@
   <div class="subtitle" id="subtitle">Carregando…</div>
 
   <div class="formula">
-    score = (review% / 100) × log10(total_reviews + 1) × (1 + desconto / 200)
+    score 0–10 = qualidade(Wilson das reviews) × fama(log de reviews) × bônus de desconto
   </div>
 
   <!-- ─── Busca de perfil Steam ─────────────────────────────────────────── -->
@@ -25,6 +25,7 @@
         autocomplete="off"
         spellcheck="false">
       <button id="profile-btn">Comparar com meu perfil</button>
+      <button id="wishonly-btn" class="secondary hidden">★ Ver apenas wishlist</button>
       <button id="clear-btn" class="secondary hidden">Limpar</button>
     </div>
     <div class="profile-status info" id="profile-status"></div>
@@ -70,11 +71,16 @@
   <div id="games-root"></div>
 
   <footer>
-    Fórmula: qualidade × fama × bônus de desconto.<br>
-    O desconto pesa 50% do seu valor real para não suplantar qualidade e popularidade.<br>
-    Wishlist comparada via endpoint público da Steam (sem API key). Biblioteca
-    (jogos que você já tem) é opcional e usa uma API key só nesta requisição —
-    nada é armazenado no servidor.
+    Score 0–10 = <b>qualidade</b> × <b>fama</b> × <b>bônus de desconto</b>.<br>
+    Qualidade = limite inferior de Wilson (95%) das reviews positivas — junta
+    "% positivas" e "nº de reviews" com confiança estatística (95% de 200 reviews
+    vale menos que 95% de 200 mil). Fama (log das reviews) e desconto são
+    modificadores suaves, então um bom jogo nunca é zerado por ter pouco desconto,
+    nem um jogo ruim é salvo por ter muito.<br>
+    A lista mostra por padrão os jogos com <b>score 6–10</b>; o restante fica num
+    "Ver mais". Wishlist comparada via endpoint público da Steam (sem API key);
+    biblioteca (jogos que você já tem) é opcional e usa uma API key só nesta
+    requisição — nada é armazenado no servidor.
   </footer>
 
   <script src="/static/app.js"></script>
