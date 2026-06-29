@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a475e"/>
+      <stop offset="1" stop-color="#171a21"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- etiqueta de preço (price tag) verde de promoção -->
+  <path d="M14 30 L30 14 a4 4 0 0 1 5.6 0 L50 28.4 a4 4 0 0 1 0 5.6 L34 50 a4 4 0 0 1-5.6 0 L14 35.6 a4 4 0 0 1 0-5.6 Z" fill="#9bd328"/>
+  <circle cx="23" cy="23" r="3.4" fill="#171a21"/>
+  <!-- seta pra baixo = preço caindo -->
+  <path d="M34 26.5 v11 M28.5 33 l5.5 5.5 5.5-5.5" stroke="#171a21" stroke-width="3.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

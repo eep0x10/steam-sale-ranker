@@ -598,7 +598,9 @@ def generate_html(by_block: dict[str, list[dict]], total_collected: int) -> str:
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Steam Sale Ranker</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{
