@@ -1,0 +1,25 @@
+# Steam Sale Ranker — gerador de dados (cron)
+# Roda steam_sale_ranker.py 1x/dia e escreve data/games.json (consumido pela app).
+# NÃO sobe servidor — é um job pontual. Agende via cron do host ou um sidecar.
+#
+# Exemplo de uso (gera o JSON num volume compartilhado com a app Flask):
+#   docker build -f Dockerfile.gen -t steam-sale-gen .
+#   docker run --rm -v steam_data:/app/data steam-sale-gen 20 --json data/games.json
+
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUTF8=1
+
+WORKDIR /app
+
+# Só o gerador precisa de requests + beautifulsoup4 (sem flask/gunicorn).
+RUN pip install --no-cache-dir "requests>=2.31" "beautifulsoup4>=4.12"
+
+COPY steam_sale_ranker.py ./
+RUN mkdir -p /app/data
+
+# Default: 20 páginas → data/games.json. Sobrescreva via args do `docker run`.
+ENTRYPOINT ["python", "steam_sale_ranker.py"]
+CMD ["20", "--json", "data/games.json"]

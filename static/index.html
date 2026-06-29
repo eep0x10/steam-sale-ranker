@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steam Sale Ranker</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <h1>Steam Sale Ranker</h1>
+  <div class="subtitle" id="subtitle">Carregando…</div>
+
+  <div class="formula">
+    score = (review% / 100) × log10(total_reviews + 1) × (1 + desconto / 200)
+  </div>
+
+  <!-- ─── Busca de perfil Steam ─────────────────────────────────────────── -->
+  <div class="profile-search">
+    <div class="search-row">
+      <input
+        type="text"
+        id="profile-input"
+        placeholder="https://steamcommunity.com/id/seu_perfil"
+        autocomplete="off"
+        spellcheck="false">
+      <button id="profile-btn">Comparar com meu perfil</button>
+      <button id="clear-btn" class="secondary hidden">Limpar</button>
+    </div>
+    <div class="profile-status info" id="profile-status"></div>
+    <div class="profile-help">
+      Para a comparação funcionar, seu perfil Steam precisa estar público.
+      Em <b>Perfil → Editar perfil → Privacidade</b>, deixe:
+      <b>Meu perfil: Público</b>, <b>Detalhes do jogo: Público</b> e marque a
+      <b>lista de desejos como pública</b>. Aceita a URL completa
+      (<code>steamcommunity.com/id/...</code> ou <code>/profiles/...</code>) ou só o seu
+      nome personalizado. Jogos na sua <b>wishlist</b> ficam grifados em
+      <b>azul</b>; jogos que você <b>já possui</b> são removidos da lista.
+    </div>
+  </div>
+
+  <!-- ─── Legenda de cores ──────────────────────────────────────────────── -->
+  <div class="legend">
+    <span><span class="sw new"></span> <b>NEW</b> — entrou em promoção hoje (vs. ontem)</span>
+    <span><span class="sw hist"></span> <b>Baixa histórica</b> — menor preço de sempre</span>
+    <span><span class="sw wish"></span> <b>Na sua wishlist</b> — após comparar o perfil</span>
+  </div>
+
+  <div id="loading">Carregando promoções…</div>
+  <div id="error-box" class="hidden"></div>
+  <div id="games-root"></div>
+
+  <footer>
+    Fórmula: qualidade × fama × bônus de desconto.<br>
+    O desconto pesa 50% do seu valor real para não suplantar qualidade e popularidade.<br>
+    Comparação de perfil feita com endpoints públicos da Steam (sem API key) —
+    nada é armazenado no servidor.
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

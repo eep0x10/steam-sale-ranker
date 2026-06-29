@@ -1,6 +1,10 @@
+.git/
 __pycache__/
 *.pyc
 *.pyo
 steam_sale_ranker.html
+index.html
 data/
 _prev_appids.json
+*.tmp
+README.md

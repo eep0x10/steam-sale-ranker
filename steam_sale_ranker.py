@@ -27,12 +27,15 @@ Blocos seguem a classificação oficial da Steam:
   Overwhelmingly Negative : 0-19%  (500+ reviews)
 
 Uso:
-  python steam_sale_ranker.py             # 10 páginas (~500 jogos)
-  python steam_sale_ranker.py 20          # 20 páginas (~1000 jogos)
-  python steam_sale_ranker.py 20 --html   # gera steam_sale_ranker.html
+  python steam_sale_ranker.py                          # 10 páginas (~500 jogos)
+  python steam_sale_ranker.py 20                       # 20 páginas (~1000 jogos)
+  python steam_sale_ranker.py 20 --html                # gera steam_sale_ranker.html
+  python steam_sale_ranker.py 20 --json data/games.json  # gera JSON p/ a app Flask
 """
 
+import json
 import math
+import os
 import re
 import sys
 import time
@@ -754,6 +757,84 @@ def save_html(html: str, path: str):
         f.write(html)
     print(f"\n[✓] HTML salvo em: {path}")
 
+# ─── Output JSON (consumido pela app Flask) ───────────────────────────────────
+
+# Campos de cada jogo expostos no JSON (mesma ordem/nomes do dict interno).
+JSON_GAME_FIELDS = [
+    "appid", "name", "discount", "orig_price", "sale_price",
+    "pct_positive", "total_reviews", "score", "block",
+    "historical_low", "low_price_brl", "is_new", "img_url", "url",
+]
+
+
+def build_json_payload(by_block: dict[str, list[dict]], total_collected: int) -> dict:
+    """
+    Monta o payload JSON consumido pelo frontend.
+
+    Estrutura:
+      {
+        "generated_at": "2026-06-29T14:30:00",        # ISO 8601 (local)
+        "generated_at_human": "29/06/2026 14:30",
+        "total_collected": 512,
+        "block_order": [...],                          # ordem canônica dos blocos
+        "block_colors": {block: "#hex"},               # cores p/ headers/legenda
+        "blocks": [
+          {"name": "Very Positive", "color": "#66c0f4", "count": 30, "games": [ {<campos>}... ]},
+          ...
+        ]
+      }
+
+    Jogos de cada bloco já vêm ordenados por score desc (feito em main()).
+    """
+    now = datetime.now()
+    blocks = []
+    for block_name in BLOCK_ORDER:
+        games = by_block.get(block_name, [])
+        if not games:
+            continue
+        serialized = []
+        for g in games:
+            row = {k: g.get(k) for k in JSON_GAME_FIELDS}
+            # normaliza tipos pra JSON limpo
+            row["discount"]      = int(g.get("discount") or 0)
+            row["pct_positive"]  = int(g.get("pct_positive") or 0)
+            row["total_reviews"] = int(g.get("total_reviews") or 0)
+            row["score"]         = round(float(g.get("score") or 0.0), 4)
+            row["historical_low"] = bool(g.get("historical_low", False))
+            row["is_new"]         = bool(g.get("is_new", False))
+            row["low_price_brl"]  = g.get("low_price_brl") or ""
+            row["reviews_human"]  = fmt_num(int(g.get("total_reviews") or 0))
+            serialized.append(row)
+        blocks.append({
+            "name":  block_name,
+            "color": BLOCK_HEX.get(block_name, "#888"),
+            "count": len(serialized),
+            "games": serialized,
+        })
+
+    return {
+        "generated_at":       now.isoformat(timespec="seconds"),
+        "generated_at_human": now.strftime("%d/%m/%Y %H:%M"),
+        "total_collected":    total_collected,
+        "block_order":        BLOCK_ORDER,
+        "block_colors":       BLOCK_HEX,
+        "blocks":             blocks,
+    }
+
+
+def save_json(by_block: dict[str, list[dict]], total_collected: int, path: str):
+    """Escreve o payload JSON em `path` (cria o diretório-pai se preciso)."""
+    parent = os.path.dirname(os.path.abspath(path))
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    payload = build_json_payload(by_block, total_collected)
+    # escreve atomicamente: grava em .tmp e renomeia (evita o Flask ler arquivo parcial)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, path)
+    print(f"\n[✓] JSON salvo em: {path}")
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
@@ -765,8 +846,21 @@ def main():
         _i = args.index("--out")
         if _i + 1 < len(args):
             out_path = args[_i + 1]
-    import os
-    state_path = os.path.join(os.path.dirname(out_path) or ".", "_prev_appids.json")
+
+    # --json <PATH>: escreve a lista de jogos (agrupada por block) como JSON.
+    # É o que a app Flask serve; o cron passa a usar este modo.
+    json_path = None
+    if "--json" in args:
+        _i = args.index("--json")
+        if _i + 1 < len(args):
+            json_path = args[_i + 1]
+        else:
+            print("[!] --json requer um caminho: --json data/games.json")
+            sys.exit(1)
+
+    # estado de NEW: guarda os appids ao lado do output principal (JSON tem prioridade)
+    _state_anchor = json_path or out_path
+    state_path = os.path.join(os.path.dirname(_state_anchor) or ".", "_prev_appids.json")
 
     numeric = [a for a in args if a.isdigit()]
     if numeric:
@@ -811,9 +905,12 @@ def main():
     if output_html:
         save_html(generate_html(by_block, len(unique)), out_path)
         print(f"\n[fase 1] lista publicada em {out_path}")
+    if json_path:
+        save_json(by_block, len(unique), json_path)
+        print(f"[fase 1] JSON publicado em {json_path}")
 
     # FASE 2 — enriquece com baixa histórica (CheapShark, lento) e republica
-    # grifando em VERMELHO os jogos em promoção histórica.
+    # grifando em AMARELO os jogos em promoção histórica.
     enrich_historical_lows(unique)
 
     print_results(by_block, len(unique))
@@ -821,6 +918,9 @@ def main():
     if output_html:
         save_html(generate_html(by_block, len(unique)), out_path)
         print(f"\n[fase 2] baixas históricas (amarelo) marcadas em {out_path}")
+    if json_path:
+        save_json(by_block, len(unique), json_path)
+        print(f"[fase 2] baixas históricas marcadas no JSON {json_path}")
 
     # salva os appids de hoje para a comparação de NEW na próxima geração
     try:
