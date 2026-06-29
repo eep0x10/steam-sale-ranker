@@ -549,8 +549,11 @@ def generate_html(by_block: dict[str, list[dict]], total_collected: int) -> str:
                 if img_url else ""
             )
             is_low   = g.get("historical_low", False)
-            low_badge = '<span class="low-badge">BAIXA HISTÓRICA</span>' if is_low else ""
-            tr_class  = ' class="hist-low"' if is_low else ""
+            is_new   = g.get("is_new", False)
+            _cls     = (["new-row"] if is_new else []) + (["hist-low"] if is_low else [])
+            tr_class = (' class="' + " ".join(_cls) + '"') if _cls else ""
+            low_badge = (('<span class="new-badge">NEW</span>' if is_new else "")
+                         + ('<span class="low-badge">BAIXA HISTÓRICA</span>' if is_low else ""))
             rows_html += f"""
               <tr{tr_class}>
                 <td class="rank">{i}</td>
@@ -690,22 +693,36 @@ def generate_html(by_block: dict[str, list[dict]], total_collected: int) -> str:
     td.orig  {{ width: 105px; color: #8f98a0; text-decoration: line-through; white-space: nowrap; }}
     td.sale      {{ width: 105px; font-weight: 600; color: #beee11; white-space: nowrap; }}
     td.low-ever  {{ width: 90px; font-family: monospace; color: #8f98a0; white-space: nowrap; font-size: 0.8rem; }}
-    tr.hist-low td.low-ever {{ color: #ff6b6b; font-weight: 700; }}
+    tr.hist-low td.low-ever {{ color: #ffd24a; font-weight: 700; }}
     td.score {{ width: 65px; font-family: monospace; color: #66c0f4; white-space: nowrap; }}
-    tr.hist-low {{ background: #331a1a !important; border-left: 3px solid #ff5b5b; }}
-    tr.hist-low:hover {{ background: #402020 !important; }}
-    .low-badge {{
+    /* baixa histórica = AMARELO */
+    tr.hist-low {{ background: #332b14 !important; border-left: 3px solid #ffce4a; }}
+    tr.hist-low:hover {{ background: #403418 !important; }}
+    /* novidade (entrou em promoção hoje) = VERDE — vence o amarelo se ambos */
+    tr.new-row {{ background: #14331c !important; border-left: 3px solid #4fd06a; }}
+    tr.new-row:hover {{ background: #1a4024 !important; }}
+    tr.new-row.hist-low {{ border-left: 3px solid #4fd06a; }}
+    .low-badge, .new-badge {{
       display: inline-block;
       margin-left: 7px;
       padding: 1px 5px;
       border-radius: 3px;
-      background: #e0443e;
-      color: #fff;
       font-size: 0.68rem;
       font-weight: 700;
       vertical-align: middle;
       letter-spacing: 0.03em;
     }}
+    .low-badge {{ background: #ffce4a; color: #1a1400; }}
+    .new-badge {{ background: #4fd06a; color: #04210b; }}
+    .legend {{
+      display: flex; flex-wrap: wrap; gap: 18px;
+      margin: 0 0 18px; padding: 10px 14px;
+      background: #16202d; border: 1px solid #2a3f57; border-radius: 8px;
+      font-size: 0.82rem; color: #c7d5e0;
+    }}
+    .legend .sw {{ display: inline-block; width: 13px; height: 13px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; }}
+    .legend .sw.new {{ background: #4fd06a; }}
+    .legend .sw.hist {{ background: #ffce4a; }}
     footer {{
       margin-top: 30px;
       color: #8f98a0;
@@ -718,6 +735,10 @@ def generate_html(by_block: dict[str, list[dict]], total_collected: int) -> str:
   <div class="subtitle">Gerado em {now}  —  {total_collected} jogos coletados</div>
   <div class="formula">
     score = (review% / 100) × log10(total_reviews + 1) × (1 + desconto / 200)
+  </div>
+  <div class="legend">
+    <span><span class="sw new"></span> <b>NEW</b> — entrou em promoção hoje (vs. ontem)</span>
+    <span><span class="sw hist"></span> <b>Baixa histórica</b> — menor preço de sempre</span>
   </div>
   {rows_by_block}
   <footer>
@@ -744,6 +765,8 @@ def main():
         _i = args.index("--out")
         if _i + 1 < len(args):
             out_path = args[_i + 1]
+    import os
+    state_path = os.path.join(os.path.dirname(out_path) or ".", "_prev_appids.json")
 
     numeric = [a for a in args if a.isdigit()]
     if numeric:
@@ -766,6 +789,16 @@ def main():
             seen.add(g["appid"])
             unique.append(g)
 
+    # NEW: jogos que NÃO estavam na geração anterior (ontem) = novidade de hoje.
+    prev_appids: set = set()
+    try:
+        with open(state_path, encoding="utf-8") as _f:
+            prev_appids = set(json.load(_f))
+    except Exception:
+        prev_appids = set()
+    for g in unique:
+        g["is_new"] = bool(prev_appids) and g["appid"] not in prev_appids
+
     # Agrupar e ordenar por score
     by_block: dict[str, list[dict]] = defaultdict(list)
     for g in unique:
@@ -787,7 +820,14 @@ def main():
 
     if output_html:
         save_html(generate_html(by_block, len(unique)), out_path)
-        print(f"\n[fase 2] promoções históricas marcadas em vermelho em {out_path}")
+        print(f"\n[fase 2] baixas históricas (amarelo) marcadas em {out_path}")
+
+    # salva os appids de hoje para a comparação de NEW na próxima geração
+    try:
+        with open(state_path, "w", encoding="utf-8") as _f:
+            json.dump([g["appid"] for g in unique], _f)
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
