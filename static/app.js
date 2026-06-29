@@ -11,8 +11,8 @@ let PAYLOAD = null;
 let WISHLIST = new Set();
 let OWNED = new Set();
 let COMPARE_ACTIVE = false;
-// Modo "ver apenas wishlist" (filtro dinâmico após comparar perfil)
-let WISHLIST_ONLY = false;
+// Filtros por tag (legenda clicável). "wish" também é o "ver apenas wishlist".
+let TAGS = { new: false, hist: false, wish: false };
 // Última resposta de /api/free-games (carregada sob demanda ao abrir a aba)
 let FREE_PAYLOAD = null;
 
@@ -89,22 +89,14 @@ function gameRow(g, rank, color, isTail) {
 //   - score ≥ CUTOFF  → linhas visíveis
 //   - score < CUTOFF  → linhas `tail-row` escondidas, reveladas por um botão
 //     "Ver mais" NO FIM DAQUELE bloco (tfoot).
-// opts.mode === "wishlist" → só jogos da wishlist (qualquer score, sem split).
-// Rank = posição por score no bloco inteiro (estável, não depende do filtro).
-function blockHtml(block, opts) {
+// Rank = posição por score no bloco inteiro. (Filtros usam a lista plana.)
+function blockHtml(block) {
   const color = block.color || "#888";
-  const wishlistOnly = opts && opts.mode === "wishlist";
   let topRows = "", tailRows = "";
   let topCount = 0, tailCount = 0;
   let rank = 0;
   for (const g of block.games) {
     rank += 1;
-    if (wishlistOnly) {
-      if (!WISHLIST.has(Number(g.appid))) continue;
-      const r = gameRow(g, rank, color, false);
-      if (r) { topRows += r; topCount += 1; }
-      continue;
-    }
     const isTail = Number(g.score) < SCORE_CUTOFF;
     const r = gameRow(g, rank, color, isTail);
     if (!r) continue;
@@ -169,20 +161,36 @@ function filterState() {
     minDisc: Number(((el("f-discount") || {}).value) || 0),
     minPct:  Number(((el("f-review")   || {}).value) || 0),
     sort:    ((el("f-sort")     || {}).value) || "score",
-    histOnly: !!((el("f-hist")  || {}).checked),
+    tagNew:  TAGS.new,
+    tagHist: TAGS.hist,
+    tagWish: TAGS.wish,
   };
 }
 
 function filtersActive(f) {
-  return !!f.q || f.minDisc > 0 || f.minPct > 0 || f.histOnly || f.sort !== "score";
+  return !!f.q || f.minDisc > 0 || f.minPct > 0 || f.sort !== "score" ||
+         f.tagNew || f.tagHist || f.tagWish;
 }
 
 function passesFilter(g, f) {
   if (f.q && !String(g.name || "").toLowerCase().includes(f.q)) return false;
   if (f.minDisc && Number(g.discount) < f.minDisc) return false;
   if (f.minPct && Number(g.pct_positive) < f.minPct) return false;
-  if (f.histOnly && !g.historical_low) return false;
+  if (f.tagNew && !g.is_new) return false;
+  if (f.tagHist && !g.historical_low) return false;
+  if (f.tagWish && !(COMPARE_ACTIVE && WISHLIST.has(Number(g.appid)))) return false;
   return true;
+}
+
+// Rótulo do cabeçalho da lista plana conforme os filtros ativos.
+function flatLabel(f) {
+  const onlyTag = !f.q && !f.minDisc && !f.minPct;
+  const tags = [f.tagNew && "new", f.tagHist && "hist", f.tagWish && "wish"].filter(Boolean);
+  if (onlyTag && tags.length === 1) {
+    return { new: "Novidades de hoje", hist: "Baixas históricas",
+             wish: "Sua wishlist em promoção" }[tags[0]];
+  }
+  return "Resultado dos filtros";
 }
 
 // "R$ 1.299,90" → 1299.90 ; vazio/—  → Infinity (cai pro fim no sort asc)
@@ -243,22 +251,18 @@ function renderGames() {
   const root = el("games-root");
   const f = filterState();
   const active = filtersActive(f);
-  const flat = active || (COMPARE_ACTIVE && WISHLIST_ONLY);
 
   const fc = el("f-clear");
   if (fc) fc.classList.toggle("hidden", !active);
 
-  // Filtros ativos (ou só-wishlist) → lista plana ordenada, com TUDO que casa.
-  if (flat) {
+  // Qualquer filtro ativo → lista plana ordenada, com TUDO que casa.
+  if (active) {
     let items = collectGames().filter(({ g }) => {
       if (COMPARE_ACTIVE && OWNED.has(Number(g.appid))) return false;
-      if (COMPARE_ACTIVE && WISHLIST_ONLY && !WISHLIST.has(Number(g.appid))) return false;
       return passesFilter(g, f);
     });
     sortGames(items, f.sort);
-    const label = (COMPARE_ACTIVE && WISHLIST_ONLY)
-      ? "Sua wishlist em promoção" : "Resultado dos filtros";
-    root.innerHTML = flatListHtml(items, label) ||
+    root.innerHTML = flatListHtml(items, flatLabel(f)) ||
       '<div class="empty-tier">Nenhum jogo com esses filtros.</div>';
     return;
   }
@@ -266,7 +270,7 @@ function renderGames() {
   // Padrão: blocos por sentimento, score CUTOFF–10 + "Ver mais" por bloco.
   let html = "";
   for (const block of (PAYLOAD.blocks || [])) {
-    html += blockHtml(block, { mode: "normal" }).html;
+    html += blockHtml(block).html;
   }
   root.innerHTML = html || '<div class="empty-tier">Nenhum jogo a exibir.</div>';
   root.querySelectorAll(".block-tail-toggle").forEach((btn) => {
@@ -449,13 +453,13 @@ async function compareProfile() {
     WISHLIST = new Set((data.wishlist || []).map(Number));
     OWNED = new Set((data.owned || []).map(Number));
     COMPARE_ACTIVE = true;
-    WISHLIST_ONLY = false;          // sempre começa mostrando tudo
-    resetWishlistOnlyBtn();
+    TAGS.wish = false;              // começa mostrando tudo
+    syncTagUI();
 
-    renderGames();
     el("clear-btn").classList.remove("hidden");
-    // botão de filtro só-wishlist só faz sentido se há wishlist
+    // botão de filtro só-wishlist só aparece se há wishlist
     el("wishonly-btn").classList.toggle("hidden", WISHLIST.size === 0);
+    renderGames();
 
     let msg = `Wishlist: ${WISHLIST.size} jogos (grifados em azul)`;
     msg += OWNED.size
@@ -484,27 +488,35 @@ function clearProfile() {
   WISHLIST = new Set();
   OWNED = new Set();
   COMPARE_ACTIVE = false;
-  WISHLIST_ONLY = false;
+  TAGS.wish = false;             // wishlist sumiu → desliga o filtro de wishlist
   el("clear-btn").classList.add("hidden");
   el("wishonly-btn").classList.add("hidden");
-  resetWishlistOnlyBtn();
+  syncTagUI();
   setStatus("", "info");
   renderGames();
 }
 
-// Botão "ver apenas wishlist" — filtra dinamicamente (re-render, sem nova busca).
-function resetWishlistOnlyBtn() {
-  const b = el("wishonly-btn");
-  if (b) { b.textContent = "★ Ver apenas wishlist"; b.classList.remove("active"); }
+// Tags da legenda (new / hist / wish) — filtram dinamicamente (re-render).
+function toggleTag(tag) {
+  if (tag === "wish" && !COMPARE_ACTIVE) {
+    setStatus("Compare seu perfil primeiro para filtrar pela sua wishlist.", "warn");
+    return;
+  }
+  TAGS[tag] = !TAGS[tag];
+  syncTagUI();
+  renderGames();
 }
 
-function toggleWishlistOnly() {
-  if (!COMPARE_ACTIVE) return;
-  WISHLIST_ONLY = !WISHLIST_ONLY;
-  const b = el("wishonly-btn");
-  b.textContent = WISHLIST_ONLY ? "✕ Ver todos os jogos" : "★ Ver apenas wishlist";
-  b.classList.toggle("active", WISHLIST_ONLY);
-  renderGames();
+// Sincroniza o visual: itens da legenda ativos + botão "ver apenas wishlist".
+function syncTagUI() {
+  document.querySelectorAll(".legend-item").forEach((node) => {
+    node.classList.toggle("active", !!TAGS[node.dataset.tag]);
+  });
+  const wb = el("wishonly-btn");
+  if (wb) {
+    wb.classList.toggle("active", TAGS.wish);
+    wb.textContent = TAGS.wish ? "✕ Ver todos os jogos" : "★ Ver apenas wishlist";
+  }
 }
 
 function clearFilters() {
@@ -512,7 +524,8 @@ function clearFilters() {
   if (el("f-discount")) el("f-discount").value = "0";
   if (el("f-review"))   el("f-review").value = "0";
   if (el("f-sort"))     el("f-sort").value = "score";
-  if (el("f-hist"))     el("f-hist").checked = false;
+  TAGS.new = TAGS.hist = TAGS.wish = false;
+  syncTagUI();
   renderGames();
 }
 
@@ -521,17 +534,20 @@ function clearFilters() {
 document.addEventListener("DOMContentLoaded", () => {
   el("profile-btn").addEventListener("click", compareProfile);
   el("clear-btn").addEventListener("click", clearProfile);
-  el("wishonly-btn").addEventListener("click", toggleWishlistOnly);
+  el("wishonly-btn").addEventListener("click", () => toggleTag("wish"));
   el("profile-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") compareProfile();
   });
 
   setupTabs();
-  ["f-search", "f-discount", "f-review", "f-sort", "f-hist"].forEach((id) => {
+  ["f-search", "f-discount", "f-review", "f-sort"].forEach((id) => {
     const node = el(id);
     if (node) node.addEventListener(id === "f-search" ? "input" : "change", renderGames);
   });
   if (el("f-clear")) el("f-clear").addEventListener("click", clearFilters);
+  document.querySelectorAll(".legend-item").forEach((node) => {
+    node.addEventListener("click", () => toggleTag(node.dataset.tag));
+  });
 
   loadGames();
 });

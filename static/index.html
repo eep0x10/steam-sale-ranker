@@ -90,15 +90,17 @@
       <option value="pct">Melhor avaliação</option>
       <option value="price">Menor preço</option>
     </select>
-    <label class="f-check"><input type="checkbox" id="f-hist"> Só baixa histórica</label>
     <button id="f-clear" class="secondary hidden">Limpar filtros</button>
   </div>
 
-  <!-- ─── Legenda de cores ──────────────────────────────────────────────── -->
-  <div class="legend">
-    <span><span class="sw new"></span> <b>NEW</b> — entrou em promoção hoje (vs. ontem)</span>
-    <span><span class="sw hist"></span> <b>Baixa histórica</b> — menor preço de sempre</span>
-    <span><span class="sw wish"></span> <b>Na sua wishlist</b> — após comparar o perfil</span>
+  <!-- ─── Legenda / filtros por tag (clicáveis) ─────────────────────────── -->
+  <div class="legend" title="Clique para filtrar só esses jogos">
+    <button type="button" class="legend-item" data-tag="new">
+      <span class="sw new"></span> <b>NEW</b> — entrou em promoção hoje (vs. ontem)</button>
+    <button type="button" class="legend-item" data-tag="hist">
+      <span class="sw hist"></span> <b>Baixa histórica</b> — menor preço de sempre</button>
+    <button type="button" class="legend-item" data-tag="wish">
+      <span class="sw wish"></span> <b>Na sua wishlist</b> — após comparar o perfil</button>
   </div>
 
   <div id="loading">Carregando promoções…</div>
