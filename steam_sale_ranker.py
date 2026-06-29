@@ -690,17 +690,17 @@ def generate_html(by_block: dict[str, list[dict]], total_collected: int) -> str:
     td.orig  {{ width: 105px; color: #8f98a0; text-decoration: line-through; white-space: nowrap; }}
     td.sale      {{ width: 105px; font-weight: 600; color: #beee11; white-space: nowrap; }}
     td.low-ever  {{ width: 90px; font-family: monospace; color: #8f98a0; white-space: nowrap; font-size: 0.8rem; }}
-    tr.hist-low td.low-ever {{ color: #4fc24f; font-weight: 700; }}
+    tr.hist-low td.low-ever {{ color: #ff6b6b; font-weight: 700; }}
     td.score {{ width: 65px; font-family: monospace; color: #66c0f4; white-space: nowrap; }}
-    tr.hist-low {{ background: #1a3320 !important; border-left: 3px solid #4fc24f; }}
-    tr.hist-low:hover {{ background: #1f4028 !important; }}
+    tr.hist-low {{ background: #331a1a !important; border-left: 3px solid #ff5b5b; }}
+    tr.hist-low:hover {{ background: #402020 !important; }}
     .low-badge {{
       display: inline-block;
       margin-left: 7px;
       padding: 1px 5px;
       border-radius: 3px;
-      background: #4fc24f;
-      color: #0a1a0a;
+      background: #e0443e;
+      color: #fff;
       font-size: 0.68rem;
       font-weight: 700;
       vertical-align: middle;
@@ -739,6 +739,11 @@ def main():
     args       = sys.argv[1:]
     max_pages  = 10
     output_html = "--html" in args
+    out_path = "steam_sale_ranker.html"
+    if "--out" in args:
+        _i = args.index("--out")
+        if _i + 1 < len(args):
+            out_path = args[_i + 1]
 
     numeric = [a for a in args if a.isdigit()]
     if numeric:
@@ -768,14 +773,21 @@ def main():
     for k in by_block:
         by_block[k].sort(key=lambda x: x["score"], reverse=True)
 
+    # FASE 1 — publica a lista de jogos JÁ (sem dados de promoção histórica),
+    # pra página aparecer rápido enquanto o enriquecimento (lento) roda.
+    if output_html:
+        save_html(generate_html(by_block, len(unique)), out_path)
+        print(f"\n[fase 1] lista publicada em {out_path}")
+
+    # FASE 2 — enriquece com baixa histórica (CheapShark, lento) e republica
+    # grifando em VERMELHO os jogos em promoção histórica.
     enrich_historical_lows(unique)
 
     print_results(by_block, len(unique))
 
     if output_html:
-        html_path = "steam_sale_ranker.html"
-        save_html(generate_html(by_block, len(unique)), html_path)
-        print(f"  Abra no browser: start {html_path}")
+        save_html(generate_html(by_block, len(unique)), out_path)
+        print(f"\n[fase 2] promoções históricas marcadas em vermelho em {out_path}")
 
 
 if __name__ == "__main__":
