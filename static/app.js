@@ -14,8 +14,8 @@ let COMPARE_ACTIVE = false;
 // Modo "ver apenas wishlist" (filtro dinâmico após comparar perfil)
 let WISHLIST_ONLY = false;
 
-// Por padrão a lista mostra só score 6–10; o resto fica num "Ver mais".
-const SCORE_CUTOFF = 6.0;
+// Por padrão a lista mostra só score CUTOFF–10; o resto fica num "Ver mais".
+const SCORE_CUTOFF = 7.0;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -161,12 +161,13 @@ function renderGames() {
     tailCount += t.count;
   }
 
-  let html = topHtml || '<div class="empty-tier">Nenhum jogo com score 6–10 hoje.</div>';
+  let html = topHtml ||
+    `<div class="empty-tier">Nenhum jogo com score ${SCORE_CUTOFF}–10 hoje.</div>`;
   if (tailHtml) {
     html += `
       <div class="tail-toggle-wrap">
         <button id="tail-toggle" class="tail-toggle" data-count="${tailCount}" aria-expanded="false">
-          ▸ Ver mais ${tailCount} jogos (score abaixo de 6)
+          ▸ Ver mais ${tailCount} jogos (score abaixo de ${SCORE_CUTOFF})
         </button>
       </div>
       <div id="tail-section" class="tail-hidden">${tailHtml}</div>`;
@@ -184,8 +185,8 @@ function toggleTail() {
   btn.setAttribute("aria-expanded", String(opened));
   const n = btn.dataset.count || "";
   btn.textContent = opened
-    ? `▾ Ocultar os ${n} jogos com score abaixo de 6`
-    : `▸ Ver mais ${n} jogos (score abaixo de 6)`;
+    ? `▾ Ocultar os ${n} jogos com score abaixo de ${SCORE_CUTOFF}`
+    : `▸ Ver mais ${n} jogos (score abaixo de ${SCORE_CUTOFF})`;
 }
 
 function renderSubtitle() {
